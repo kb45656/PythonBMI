@@ -41,17 +41,21 @@ def parse_positive_number(value):
 
 @app.route("/", methods=["GET", "POST"])
 def index():
+    name_input = ""
     height_input = ""
     weight_input = ""
     errors = {}
     result = None
 
     if request.method == "POST":
+        name_input = request.form.get("name", "").strip()
         height_input = request.form.get("height", "").strip()
         weight_input = request.form.get("weight", "").strip()
         height = parse_positive_number(height_input)
         weight = parse_positive_number(weight_input)
 
+        if not name_input:
+            errors["name"] = "請輸入姓名。"
         if height is None:
             errors["height"] = "請輸入大於 0 的有效身高（公分）。"
         if weight is None:
@@ -68,10 +72,15 @@ def index():
                     errors["weight"] = "無法使用這組數值計算 BMI，請檢查身高與體重。"
                 else:
                     displayed_bmi = round(bmi, 1)
-                    result = {"bmi": f"{displayed_bmi:.1f}", **bmi_guidance(displayed_bmi)}
+                    result = {
+                        "name": name_input,
+                        "bmi": f"{displayed_bmi:.1f}",
+                        **bmi_guidance(displayed_bmi),
+                    }
 
     return render_template(
         "index.html",
+        name_input=name_input,
         height_input=height_input,
         weight_input=weight_input,
         errors=errors,
