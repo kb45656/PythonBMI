@@ -92,3 +92,14 @@ jobs:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
           slot-name: test
           package: dist
+          
+  promote-production:
+    name: Promote Production
+    needs: deploy
+    runs-on: windows-latest
+    environment:
+      name: production
+
+    steps:
+      - name: Production approval completed
+        run: echo "Production promotion approved."
