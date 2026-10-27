@@ -39,6 +39,40 @@ def parse_positive_number(value):
     return number if math.isfinite(number) and number > 0 else None
 
 
+def military_guidance(height, bmi):
+    """Classify physical status using the current Taiwan conscription table."""
+    rounded_height = math.floor(height)
+    if rounded_height <= 154 or rounded_height >= 196:
+        return {
+            "status": "免役體位",
+            "tone": "low",
+            "reason": "身高 154 公分以下或 196 公分以上。",
+        }
+    if bmi < 15 or bmi > 35:
+        return {
+            "status": "免役體位",
+            "tone": "low",
+            "reason": "BMI 未滿 15 或超過 35。",
+        }
+    if 155 <= rounded_height <= 157:
+        return {
+            "status": "替代役體位",
+            "tone": "healthy",
+            "reason": "身高 155 至 157 公分，且 BMI 介於 15 至 35。",
+        }
+    if 16.5 <= bmi <= 32:
+        return {
+            "status": "常備役體位",
+            "tone": "healthy",
+            "reason": "身高 158 至 195 公分，且 BMI 介於 16.5 至 32。",
+        }
+    return {
+        "status": "替代役體位",
+        "tone": "high",
+        "reason": "身高 158 至 195 公分，且 BMI 大於 32 至 35。",
+    }
+
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     name_input = ""
@@ -46,8 +80,10 @@ def index():
     weight_input = ""
     errors = {}
     result = None
+    military_result = None
 
     if request.method == "POST":
+        action = request.form.get("action", "bmi")
         name_input = request.form.get("name", "").strip()
         height_input = request.form.get("height", "").strip()
         weight_input = request.form.get("weight", "").strip()
@@ -72,11 +108,18 @@ def index():
                     errors["weight"] = "無法使用這組數值計算 BMI，請檢查身高與體重。"
                 else:
                     displayed_bmi = round(bmi, 1)
-                    result = {
-                        "name": name_input,
-                        "bmi": f"{displayed_bmi:.1f}",
-                        **bmi_guidance(displayed_bmi),
-                    }
+                    if action == "military":
+                        military_result = {
+                            "name": name_input,
+                            "bmi": f"{displayed_bmi:.1f}",
+                            **military_guidance(height, displayed_bmi),
+                        }
+                    else:
+                        result = {
+                            "name": name_input,
+                            "bmi": f"{displayed_bmi:.1f}",
+                            **bmi_guidance(displayed_bmi),
+                        }
 
     return render_template(
         "index.html",
@@ -85,6 +128,7 @@ def index():
         weight_input=weight_input,
         errors=errors,
         result=result,
+        military_result=military_result,
     )
 
 

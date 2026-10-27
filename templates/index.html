@@ -57,13 +57,30 @@
                     {% if errors.weight %}<p class="field-error" id="weight-error">{{ errors.weight }}</p>{% endif %}
                   </div>
                 </div>
-                <button type="submit">計算 BMI <span aria-hidden="true">↗</span></button>
+                <div class="button-row">
+                  <button type="submit" name="action" value="bmi">計算 BMI <span aria-hidden="true">↗</span></button>
+                  <button type="submit" name="action" value="military" class="secondary-button">判斷兵役體位 <span aria-hidden="true">↗</span></button>
+                </div>
               </form>
             </div>
           </div>
 
           <div class="hero-side">
-            {% if result %}
+            {% if military_result %}
+              <section class="result-panel {{ military_result.tone }}" aria-labelledby="military-result-title" aria-live="polite">
+                <span class="panel-kicker">MILITARY STATUS / 兵役判斷</span>
+                <span class="result-name">{{ military_result.name }} 的 BMI</span>
+                <div class="result-main">
+                  <span class="result-number">{{ military_result.bmi }}</span>
+                  <span class="result-unit">BMI</span>
+                </div>
+                <div class="result-divider"></div>
+                <span class="result-label">判斷結果 <strong>{{ military_result.status }}</strong></span>
+                <h2 id="military-result-title">判斷說明</h2>
+                <p>{{ military_result.reason }}</p>
+                <span class="result-decoration" aria-hidden="true">✳</span>
+              </section>
+            {% elif result %}
               <section class="result-panel {{ result.tone }}" aria-labelledby="result-title" aria-live="polite">
                 <span class="panel-kicker">YOUR RESULT / 計算結果</span>
                 <span class="result-name">{{ result.name }} 的 BMI</span>
@@ -103,6 +120,7 @@
           </div>
         </section>
         <p class="disclaimer">此結果僅供成人參考，無法反映肌肉量等個別差異，亦不適用於兒童、青少年或孕婦；若有健康疑慮，請諮詢醫療專業人員。</p>
+        <p class="disclaimer military-disclaimer">兵役體位依內政部役政司「體位區分標準」的身高與 BMI 規則試算，實際結果仍以徵兵檢查及役政機關核定為準。<a href="https://dca.moi.gov.tw/PhysicalStatus/" rel="noopener noreferrer" target="_blank">查看官方標準</a></p>
       </main>
       <footer>© 好好生活 <span>TAKE CARE, EVERY DAY.</span></footer>
     </div>

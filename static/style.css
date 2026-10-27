@@ -38,8 +38,11 @@ input:focus { border-color: #528066; box-shadow: 0 0 0 3px #52806622; }
 input[aria-invalid="true"] { border-color: #ba6956; }
 .unit { position: absolute; top: 17px; right: 15px; color: #9cac9e; font-size: 13px; }
 .field-error { margin: 7px 0 0; color: #a64e39; font-size: 12px; line-height: 1.5; }
-button { display: flex; align-items: center; justify-content: space-between; width: 100%; margin-top: 23px; padding: 16px 20px; border: 0; border-radius: 9px; background: #285a43; color: white; cursor: pointer; font: inherit; font-size: 15px; font-weight: 700; transition: background .2s, transform .2s; }
+.button-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 23px; }
+button { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 16px 20px; border: 0; border-radius: 9px; background: #285a43; color: white; cursor: pointer; font: inherit; font-size: 15px; font-weight: 700; transition: background .2s, transform .2s; }
 button:hover { background: #19432f; transform: translateY(-1px); }
+.secondary-button { background: #edf4ec; color: #285a43; }
+.secondary-button:hover { background: #dcebd9; }
 button:focus-visible, .brand:focus-visible { outline: 3px solid #94b589; outline-offset: 3px; }
 button span { font-size: 20px; font-weight: 400; }
 .hero-side { display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 0; }
@@ -81,6 +84,8 @@ button span { font-size: 20px; font-weight: 400; }
 .range-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; }
 .low-dot { background: #a2b8ca; }.healthy-dot { background: #85b487; }.high-dot { background: #e1c37d; }.obese-dot { background: #ca977d; }
 .disclaimer { margin: 0 0 50px; color: #839389; font-size: 12px; line-height: 1.8; }
+.military-disclaimer { margin-top: -35px; }
+.military-disclaimer a { color: #527b5d; }
 footer { display: flex; justify-content: space-between; padding: 22px 0 30px; border-top: 1px solid #e1e5dc; color: #94a49a; font-size: 11px; }
 footer span { letter-spacing: .14em; }
 
@@ -99,6 +104,7 @@ footer span { letter-spacing: .14em; }
   h1 { font-size: 43px; }
   .calculator { padding: 23px 18px; }
   .form-fields { grid-template-columns: 1fr; gap: 17px; }
+  .button-row { grid-template-columns: 1fr; }
   .result-panel { padding: 32px 26px; }
   .ranges { padding: 22px 18px; }
 }

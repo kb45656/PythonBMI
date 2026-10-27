@@ -1,6 +1,6 @@
 import unittest
 
-from app import app, bmi_guidance
+from app import app, bmi_guidance, military_guidance
 
 
 class BmiAppTests(unittest.TestCase):
@@ -54,6 +54,33 @@ class BmiAppTests(unittest.TestCase):
         page = response.get_data(as_text=True)
         self.assertIn("請輸入姓名", page)
         self.assertNotIn("YOUR RESULT", page)
+
+    def test_military_status_calculation(self):
+        response = self.client.post(
+            "/",
+            data={"name": "王小明", "height": "170", "weight": "65", "action": "military"},
+        )
+        page = response.get_data(as_text=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("兵役判斷", page)
+        self.assertIn("常備役體位", page)
+        self.assertIn("22.5", page)
+
+    def test_military_status_boundaries(self):
+        self.assertEqual(military_guidance(154, 22.5)["status"], "免役體位")
+        self.assertEqual(military_guidance(156, 22.5)["status"], "替代役體位")
+        self.assertEqual(military_guidance(170, 16.5)["status"], "常備役體位")
+        self.assertEqual(military_guidance(170, 32.1)["status"], "替代役體位")
+        self.assertEqual(military_guidance(170, 35.1)["status"], "免役體位")
+
+    def test_military_invalid_fields_do_not_produce_result(self):
+        response = self.client.post(
+            "/",
+            data={"name": "王小明", "height": "170", "weight": "", "action": "military"},
+        )
+        page = response.get_data(as_text=True)
+        self.assertIn("請輸入大於 0", page)
+        self.assertNotIn("MILITARY STATUS", page)
 
 
 if __name__ == "__main__":
