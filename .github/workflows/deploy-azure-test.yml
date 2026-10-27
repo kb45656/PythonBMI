@@ -12,6 +12,7 @@ on:
       - static/**
       - tests/**
       - .github/workflows/deploy-azure-test.yml
+      - .github/workflows/deploy-azure.yml
   workflow_dispatch:
 
 permissions:
